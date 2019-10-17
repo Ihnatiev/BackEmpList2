@@ -9,8 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// import { findUsers, userCreate, userLogin } from "../controllers/userController";
-const SearchController_1 = require("../controllers/SearchController");
 const checks_1 = require("../middleware/checks");
 const employeeController_1 = require("../controllers/employeeController");
 const userController_1 = require("../controllers/userController");
@@ -80,17 +78,6 @@ exports.default = [
         handler: [check_auth_1.checkJwt,
             (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 yield employeesController.deleteEmployee(req, res);
-            })
-        ]
-    },
-    {
-        path: "/api/v1/search",
-        method: "get",
-        handler: [
-            checks_1.checkSearchParams,
-            ({ query }, res) => __awaiter(void 0, void 0, void 0, function* () {
-                const result = yield SearchController_1.getPlacesByName(query.q);
-                res.status(200).send(result);
             })
         ]
     }

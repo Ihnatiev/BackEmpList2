@@ -42,14 +42,17 @@ class EmployeesController {
             const skip = page * numPerPage;
             const end_limit = numPerPage;
             const limit = skip + ',' + end_limit;
-            yield this.connection.execute('SELECT count(*) as totalCount FROM Employee')
+            yield this.connection
+                .execute('SELECT count(*) as totalCount FROM Employee')
                 .then((results) => {
                 totalCount = results[0].totalCount;
             })
                 .then(() => __awaiter(this, void 0, void 0, function* () {
-                let results = yield this.connection.execute("SELECT empID, empName, creator, IF(empActive, 'Yes', 'No')\
-    empActive, dpName FROM Employee\
-    INNER JOIN Department ON empDepartment = dpID LIMIT " + limit);
+                let results = yield this.connection
+                    .execute("SELECT empID, empName, creator,\
+        IF(empActive, 'Yes', 'No')\
+        empActive, dpName FROM Employee INNER JOIN Departmen\
+        ON empDepartment = dpID LIMIT " + limit);
                 return res.json({
                     employees: results,
                     maxEmployees: totalCount
@@ -82,6 +85,7 @@ class EmployeesController {
                     message: 'Adding employee failed!\n' + err.message
                 });
             }
+            ;
         });
     }
     updateEmployee(req, res) {
@@ -90,38 +94,34 @@ class EmployeesController {
             const creator = req.userData.userId;
             const { empName, empActive, empDepartment } = req.body;
             const useCase = new employee_1.UpdateEmployee(this.employeeService);
-            try {
-                yield useCase.execute(empID, empName, empActive, empDepartment, creator)
-                    .then((result) => {
-                    try {
-                        if (result.affectedRows > 0) {
-                            res.status(200).json({
-                                message: 'Update successful!'
-                            });
-                        }
-                        else {
-                            res.status(401).json({
-                                message: 'Not authorized!'
-                            });
-                        }
-                        ;
+            yield useCase.execute(empID, empName, empActive, empDepartment, creator)
+                .then((result) => {
+                try {
+                    if (result.affectedRows > 0) {
+                        res.status(200).json({
+                            message: 'Update successful!'
+                        });
                     }
-                    catch (error) {
-                        res.status(500).json({
-                            message: 'Updating an employee failed!'
+                    else {
+                        res.status(401).json({
+                            message: 'Not authorized!'
                         });
                     }
                     ;
-                });
-            }
-            catch (err) {
+                }
+                catch (error) {
+                    res.status(500).json({
+                        message: 'Updating an employee failed!'
+                    });
+                }
+                ;
+            }).catch(err => {
                 res.status(500).json({
-                    message: 'Please fill in the blank fields'
+                    message: err.message
                 });
-            }
+            });
         });
     }
-    ;
     deleteEmployee(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const empID = req.params.empID;
@@ -156,8 +156,6 @@ class EmployeesController {
             });
         });
     }
-    ;
 }
 exports.EmployeesController = EmployeesController;
-;
 //# sourceMappingURL=employeeController.js.map

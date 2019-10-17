@@ -21,7 +21,6 @@ class UserController {
     constructor(dbConnection) {
         this.userService = new userService_1.UserService(dbConnection);
     }
-    ;
     createUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { name, email } = req.body;
@@ -76,6 +75,7 @@ class UserController {
                         message: 'Auth failed'
                     });
                 }
+                ;
                 const token = jsonwebtoken_1.default.sign({ email: fetchedUser.email, userId: fetchedUser.id }, secret_1.default.jwtSecret, { expiresIn: '1h' });
                 return res.status(200).json({
                     token: token,

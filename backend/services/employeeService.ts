@@ -1,20 +1,20 @@
-import { Employee } from '../models/employeeModel'
-import { IEmployee } from '../interfaces/IEmployee'
-import { IDBConnection } from '../config/IDBConnection'
+import { Employee } from '../models/employeeModel';
+import { IEmployee } from '../interfaces/IEmployee';
+import { IDBConnection } from '../config/IDBConnection';
 
 export class EmployeesService extends IEmployee {
-  private connection: any
+  private connection: any;
 
   constructor(connection: IDBConnection) {
-    super()
-    this.connection = connection
+    super();
+    this.connection = connection;
   }
 
   async find(empID: number): Promise<Employee> {
     let queryResult = await this.connection.execute(
       "SELECT empID, empName, IF (empActive, 'Yes', 'No')\
       empActive, dpName FROM Employee NNER JOIN Department\
-      ON empDepartment = dpID WHERE empID = ?", empID)
+      ON empDepartment = dpID WHERE empID = ?", empID);
     return queryResult[0];
   }
 
@@ -23,11 +23,11 @@ export class EmployeesService extends IEmployee {
       "SELECT empID, empName, IF (empActive, 'Yes', 'No')\
     empActive, dpName FROM Employee\
     INNER JOIN Department ON empDepartment = dpID")
-    let results = []
+    let results = [];
     results = queryResults.map((m: any) => {
-      return m
-    })
-    return results
+      return m;
+    });
+    return results;
   }
 
   async persist(employee: Employee): Promise<Employee> {
@@ -38,9 +38,9 @@ export class EmployeesService extends IEmployee {
         employee.empActive,
         employee.empDepartment,
         employee.creator
-      ])
-    employee.empID = result.insertId
-    return employee
+      ]);
+    employee.empID = result.insertId;
+    return employee;
   }
 
   async merge(employee: Employee, creator: string): Promise<Employee> {
@@ -52,15 +52,15 @@ export class EmployeesService extends IEmployee {
         employee.empDepartment,
         employee.empID,
         creator
-      ])
+      ]);
     // console.log(employee.empID);
-    return result
+    return result;
   }
 
   async delete(employee: Employee, creator: string): Promise<Employee> {
     let result = await this.connection.execute(
       "DELETE FROM Employee WHERE empID = ? AND creator = ?",
-      [employee.empID, creator])
-    return result
+      [employee.empID, creator]);
+    return result;
   }
 }

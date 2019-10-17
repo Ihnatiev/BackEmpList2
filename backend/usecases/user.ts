@@ -1,5 +1,5 @@
 import { IUser } from '../interfaces/IUser';
-import { User } from '../models/user';
+import { User } from '../models/userModel';
 
 export class CreateUser {
   private userRepository: IUser;

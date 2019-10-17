@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
-// import { findUsers, userCreate, userLogin } from "../controllers/userController";
-import { getPlacesByName } from "../controllers/SearchController";
-import { checkSearchParams, checkUserCreate } from "../middleware/checks";
+import { checkUserCreate } from "../middleware/checks";
 import { EmployeesController } from '../controllers/employeeController';
 import { UserController } from '../controllers/userController';
 import { checkJwt } from '../middleware/check-auth';
@@ -73,17 +71,6 @@ export default [
     handler: [checkJwt,
       async (req: Request, res: Response) => {
         await employeesController.deleteEmployee(req, res);
-      }
-    ]
-  },
-  {
-    path: "/api/v1/search",
-    method: "get",
-    handler: [
-      checkSearchParams,
-      async ({ query }: Request, res: Response) => {
-        const result = await getPlacesByName(query.q);
-        res.status(200).send(result);
       }
     ]
   }

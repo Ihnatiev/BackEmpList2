@@ -27,7 +27,6 @@ class UserService extends IUser_1.IUser {
             return user;
         });
     }
-    ;
     find(email) {
         return __awaiter(this, void 0, void 0, function* () {
             let queryResults = yield this.connection.execute('SELECT * FROM Users WHERE email = ?', [email]);

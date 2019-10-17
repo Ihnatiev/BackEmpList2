@@ -1,4 +1,4 @@
-import { User } from '../models/user';
+import { User } from '../models/userModel';
 
 export abstract class IUser {
   abstract async signup(user: User): Promise<User>;

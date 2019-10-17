@@ -10,7 +10,7 @@ export class UserController {
 
   constructor(dbConnection: IDBConnection) {
     this.userService = new UserService(dbConnection);
-  };
+  }
 
   async createUser(req: any, res: any) {
     const { name, email } = req.body;
@@ -62,7 +62,7 @@ export class UserController {
             success: false,
             message: 'Auth failed'
           });
-        }
+        };
         const token = jwt.sign(
           { email: fetchedUser.email, userId: fetchedUser.id },
           secret.jwtSecret,

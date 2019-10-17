@@ -1,12 +1,12 @@
-import { User } from '../models/user';
+import { User } from '../models/userModel';
 import { IUser } from '../interfaces/IUser';
-import { IDBConnection } from '../config/IDBConnection'
+import { IDBConnection } from '../config/IDBConnection';
 
 export class UserService extends IUser {
   private connection: any;
 
   constructor(connection: IDBConnection) {
-    super()
+    super();
     this.connection = connection;
   };
 
@@ -17,16 +17,15 @@ export class UserService extends IUser {
         user.name,
         user.email,
         user.password
-      ]
-    );
+      ]);
     user.id = result.insertId;
     return user;
-  };
+  }
 
   async find(email: string): Promise<User> {
     let queryResults = await this.connection.execute(
-      'SELECT * FROM Users WHERE email = ?', [email]
-    )
+      'SELECT * FROM Users WHERE email = ?', [email]);
     return queryResults[0];
   }
 }
+

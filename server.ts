@@ -21,7 +21,7 @@ const app = express();
 const httpsOptions = {
   key: fs.readFileSync('./backend/config/key.pem'),
   cert: fs.readFileSync('./backend/config/cert.pem')
-}
+};
 
 applyMiddleware(middleware, app);
 applyRoutes(routes, app);
@@ -47,5 +47,5 @@ server.listen(PORT, () =>
   console.log(`Server is running https://localhost:${PORT}...`)
 );
 
-export default app
+export default app;
 
