@@ -46,8 +46,7 @@ export class EmployeesController {
       })
       .then(async () => {
         let results = await this.connection.execute("SELECT empID, empName, creator, IF(empActive, 'Yes', 'No')\
-    empActive, dpName FROM Employee\
-    INNER JOIN Department ON empDepartment = dpID LIMIT " + limit);
+    empActive, dpName FROM Employee INNER JOIN Department ON empDepartment = dpID LIMIT " + limit);
         return res.json({
           employees: results,
           maxEmployees: totalCount
