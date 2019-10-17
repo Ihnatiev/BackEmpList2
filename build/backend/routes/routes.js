@@ -9,36 +9,41 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const userController_1 = require("../controllers/userController");
+// import { findUsers, userCreate, userLogin } from "../controllers/userController";
 const SearchController_1 = require("../controllers/SearchController");
 const checks_1 = require("../middleware/checks");
 const employeeController_1 = require("../controllers/employeeController");
+const userController_1 = require("../controllers/userController");
+const check_auth_1 = require("../middleware/check-auth");
 const app_1 = require("../app");
 const mysqlConnection = new app_1.MysqlConnection();
 const employeesController = new employeeController_1.EmployeesController(mysqlConnection);
+const userController = new userController_1.UserController(mysqlConnection);
 exports.default = [
-    {
-        path: "/api/users",
-        method: "get",
-        handler: [userController_1.findUsers]
-    },
     {
         path: "/api/auth/signup",
         method: "post",
-        handler: [checks_1.checkUserCreate, userController_1.userCreate]
+        handler: [checks_1.checkUserCreate,
+            (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+                yield userController.createUser(req, res);
+            })
+        ]
     },
     {
         path: "/api/auth/login",
         method: "post",
-        handler: [userController_1.userLogin]
+        handler: [
+            (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+                yield userController.loginUser(req, res);
+            })
+        ]
     },
     {
         path: "/api/employees",
         method: "get",
         handler: [
             (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-                let results = yield employeesController.findAllEmployees(req, res);
-                res.send(results);
+                yield employeesController.findAllEmployees(req, res);
             })
         ]
     },
@@ -47,38 +52,34 @@ exports.default = [
         method: "get",
         handler: [
             (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-                let result = yield employeesController.findEmployee(req, res);
-                res.send(result);
+                yield employeesController.findEmployee(req, res);
             })
         ]
     },
     {
         path: "/api/employees/",
         method: "post",
-        handler: [
+        handler: [check_auth_1.checkJwt,
             (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-                let result = yield employeesController.createEmployee(req, res);
-                res.send(result);
+                yield employeesController.createEmployee(req, res);
             })
         ]
     },
     {
         path: "/api/employees/:empID",
         method: "put",
-        handler: [
+        handler: [check_auth_1.checkJwt,
             (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-                let result = yield employeesController.updateEmployee(req, res);
-                res.send(result);
+                yield employeesController.updateEmployee(req, res);
             })
         ]
     },
     {
         path: "/api/employees/:empID",
         method: "delete",
-        handler: [
+        handler: [check_auth_1.checkJwt,
             (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-                let result = yield employeesController.deleteEmployee(req, res);
-                res.send(result);
+                yield employeesController.deleteEmployee(req, res);
             })
         ]
     },

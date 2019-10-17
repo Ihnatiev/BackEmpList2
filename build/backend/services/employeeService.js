@@ -9,69 +9,61 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const employeeModel_1 = require("../models/employeeModel");
 const IEmployee_1 = require("../interfaces/IEmployee");
-class EmployeesService extends IEmployee_1.IEmployeeRepository {
+class EmployeesService extends IEmployee_1.IEmployee {
     constructor(connection) {
         super();
         this.connection = connection;
     }
-    convertModel(r) {
-        let employee = new employeeModel_1.Employee();
-        employee.empID = r.empID;
-        employee.empName = r.empName;
-        employee.empActive = r.empActive;
-        employee.empDepartment = r.dpName;
-        return employee;
-    }
     find(empID) {
         return __awaiter(this, void 0, void 0, function* () {
-            let queryResults = yield this.connection.execute("SELECT empID, empName, IF (empActive, 'Yes', 'No')\
+            let queryResult = yield this.connection.execute("SELECT empID, empName, IF (empActive, 'Yes', 'No')\
       empActive, dpName FROM Employee NNER JOIN Department\
       ON empDepartment = dpID WHERE empID = ?", empID);
-            return this.convertModel(queryResults[0]);
+            return queryResult[0];
         });
     }
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.connection.execute("SELECT count(*) as TotalCount FROM Employee");
             let queryResults = yield this.connection.execute("SELECT empID, empName, IF (empActive, 'Yes', 'No')\
     empActive, dpName FROM Employee\
     INNER JOIN Department ON empDepartment = dpID");
             let results = [];
             results = queryResults.map((m) => {
-                return this.convertModel(m);
+                return m;
             });
             return results;
         });
     }
     persist(employee) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = yield this.connection.execute('INSERT INTO Employee SET empName = ?, empActive = ?, empDepartment = ?', [
-                employee.empName,
-                employee.empActive,
-                employee.empDepartment
-            ]);
-            employee.empID = result.employeeId;
-            return employee;
-        });
-    }
-    merge(employee) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let result = yield this.connection.execute("UPDATE Employee SET empName = ?, empActive = ?,\
-      empDepartment = ? WHERE empID = ?", [
+            let result = yield this.connection.execute("INSERT INTO Employee SET empName = ?, empActive = ?, empDepartment = ?, creator = ?", [
                 employee.empName,
                 employee.empActive,
                 employee.empDepartment,
-                employee.empID
+                employee.creator
             ]);
+            employee.empID = result.insertId;
+            return employee;
+        });
+    }
+    merge(employee, creator) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield this.connection.execute("UPDATE Employee SET empName = ?, empActive = ?, empDepartment = ? WHERE empID = ? AND creator = ?", [
+                employee.empName,
+                employee.empActive,
+                employee.empDepartment,
+                employee.empID,
+                creator
+            ]);
+            // console.log(employee.empID);
             return result;
         });
     }
-    delete(employee) {
+    delete(employee, creator) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.connection.execute("DELETE FROM Employee WHERE empID = ?", employee.empID);
-            return this.convertModel(employee);
+            let result = yield this.connection.execute("DELETE FROM Employee WHERE empID = ? AND creator = ?", [employee.empID, creator]);
+            return result;
         });
     }
 }

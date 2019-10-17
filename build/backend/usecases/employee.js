@@ -11,59 +11,61 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const employeeModel_1 = require("../models/employeeModel");
 class GetEmployee {
-    constructor(employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    constructor(employeeInterface) {
+        this.employeeInterface = employeeInterface;
     }
     execute(empID) {
-        return this.employeeRepository.find(empID);
+        return this.employeeInterface.find(empID);
     }
 }
 exports.GetEmployee = GetEmployee;
 class ListEmployees {
-    constructor(employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    constructor(employeeInterface) {
+        this.employeeInterface = employeeInterface;
     }
     execute() {
-        return this.employeeRepository.findAll();
+        return this.employeeInterface.findAll();
     }
 }
 exports.ListEmployees = ListEmployees;
 class CreateEmployee {
-    constructor(employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    constructor(employeeInterface) {
+        this.employeeInterface = employeeInterface;
     }
-    execute(empName, empActive, empDepartment) {
+    execute(empName, empActive, empDepartment, creator) {
         let employee = new employeeModel_1.Employee();
         employee.empName = empName;
         employee.empActive = empActive;
         employee.empDepartment = empDepartment;
-        return this.employeeRepository.persist(employee);
+        employee.creator = creator;
+        return this.employeeInterface.persist(employee);
     }
 }
 exports.CreateEmployee = CreateEmployee;
 class UpdateEmployee {
-    constructor(employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    constructor(employeeInterface) {
+        this.employeeInterface = employeeInterface;
     }
-    execute(empID, empName, empActive, empDepartment) {
+    execute(empID, empName, empActive, empDepartment, creator) {
         return __awaiter(this, void 0, void 0, function* () {
-            let employee = yield this.employeeRepository.find(empID);
+            let employee = yield this.employeeInterface.find(empID);
             employee.empName = empName;
             employee.empActive = empActive;
             employee.empDepartment = empDepartment;
-            return this.employeeRepository.merge(employee);
+            employee.creator = creator;
+            return this.employeeInterface.merge(employee, creator);
         });
     }
 }
 exports.UpdateEmployee = UpdateEmployee;
 class DeleteEmployee {
-    constructor(employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    constructor(employeeInterface) {
+        this.employeeInterface = employeeInterface;
     }
-    execute(empID) {
+    execute(empID, creator) {
         return __awaiter(this, void 0, void 0, function* () {
-            let employee = yield this.employeeRepository.find(empID);
-            return this.employeeRepository.delete(employee);
+            let employee = yield this.employeeInterface.find(empID);
+            return this.employeeInterface.delete(employee, creator);
         });
     }
 }

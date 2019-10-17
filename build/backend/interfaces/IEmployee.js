@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class IEmployeeRepository {
+class IEmployee {
 }
-exports.IEmployeeRepository = IEmployeeRepository;
+exports.IEmployee = IEmployee;
 //# sourceMappingURL=IEmployee.js.map

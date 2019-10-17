@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Employee {
-    constructor(empID = 0, empName = "", empActive = false, empDepartment = 0) {
+    constructor(empID = 0, empName = "", empActive = false, empDepartment = 0, creator = '') {
         this._empID = empID;
         this._empName = empName;
         this._empActive = empActive;
         this._empDepartment = empDepartment;
+        this._creator = creator;
     }
     get empID() {
         return this._empID;
@@ -30,6 +31,12 @@ class Employee {
     }
     set empDepartment(empDepartment) {
         this._empDepartment = empDepartment;
+    }
+    get creator() {
+        return this._creator;
+    }
+    set creator(creator) {
+        this._creator = creator;
     }
 }
 exports.Employee = Employee;

@@ -3,6 +3,7 @@ export class Employee {
   private _empName: string
   private _empActive: boolean
   private _empDepartment: number
+  private _creator: string
 
   get empID(): number {
     return this._empID
@@ -36,11 +37,20 @@ export class Employee {
     this._empDepartment = empDepartment
   }
 
-  constructor(empID: number = 0, empName: string = "", empActive: boolean = false, empDepartment: number = 0) {
+  get creator(): string {
+    return this._creator
+  }
+
+  set creator(creator: string) {
+    this._creator = creator
+  }
+
+  constructor(empID: number = 0, empName: string = "", empActive: boolean = false, empDepartment: number = 0, creator: string = '') {
     this._empID = empID
     this._empName = empName
     this._empActive = empActive
     this._empDepartment = empDepartment
+    this._creator = creator
   }
 }
 

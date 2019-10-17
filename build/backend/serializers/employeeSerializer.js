@@ -5,7 +5,8 @@ const _serializeSingleEmployee = (employee) => {
         empID: employee.empID,
         empName: employee.empName,
         empActive: employee.empActive,
-        empDepartment: employee.empDepartment
+        empDepartment: employee.empDepartment,
+        creator: employee.creator
     };
 };
 class EmployeeSerializer {

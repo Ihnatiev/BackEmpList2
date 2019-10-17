@@ -1,8 +1,6 @@
 import fs from "fs";
 import https from "https";
 import express from "express";
-import mongoose from "mongoose";
-import secret from "./backend/config/secret";
 import routes from "./backend/routes/routes";
 import middleware from "./backend/middleware";
 import { applyMiddleware, applyRoutes } from "./backend/utils";
@@ -24,18 +22,6 @@ const httpsOptions = {
   key: fs.readFileSync('./backend/config/key.pem'),
   cert: fs.readFileSync('./backend/config/cert.pem')
 }
-
-const mongoUrl: string = secret.mongoUrl;
-
-mongoose.Promise = global.Promise;
-mongoose.connect(mongoUrl, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    console.log("Connected to MongoDB")
-  })
-  .catch(() => {
-    console.log('Connection failed!')
-  })
-
 
 applyMiddleware(middleware, app);
 applyRoutes(routes, app);

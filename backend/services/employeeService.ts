@@ -1,8 +1,8 @@
 import { Employee } from '../models/employeeModel'
-import { IEmployeeRepository } from '../interfaces/IEmployee'
+import { IEmployee } from '../interfaces/IEmployee'
 import { IDBConnection } from '../config/IDBConnection'
 
-export class EmployeesService extends IEmployeeRepository {
+export class EmployeesService extends IEmployee {
   private connection: any
 
   constructor(connection: IDBConnection) {
@@ -10,69 +10,57 @@ export class EmployeesService extends IEmployeeRepository {
     this.connection = connection
   }
 
-  private convertModel(r: any) {
-    let employee = new Employee()
-
-    employee.empID = r.empID
-    employee.empName = r.empName
-    employee.empActive = r.empActive
-    employee.empDepartment = r.dpName
-
-    return employee
-  }
-
   async find(empID: number): Promise<Employee> {
-    let queryResults = await this.connection.execute(
+    let queryResult = await this.connection.execute(
       "SELECT empID, empName, IF (empActive, 'Yes', 'No')\
       empActive, dpName FROM Employee NNER JOIN Department\
-      ON empDepartment = dpID WHERE empID = ?", empID
-    )
-    return this.convertModel(queryResults[0])
+      ON empDepartment = dpID WHERE empID = ?", empID)
+    return queryResult[0];
   }
 
   async findAll(): Promise<Array<Employee>> {
-    await this.connection.execute("SELECT count(*) as TotalCount FROM Employee")
     let queryResults = await this.connection.execute(
-    "SELECT empID, empName, IF (empActive, 'Yes', 'No')\
+      "SELECT empID, empName, IF (empActive, 'Yes', 'No')\
     empActive, dpName FROM Employee\
     INNER JOIN Department ON empDepartment = dpID")
     let results = []
     results = queryResults.map((m: any) => {
-      return this.convertModel(m)
+      return m
     })
     return results
   }
 
   async persist(employee: Employee): Promise<Employee> {
     let result = await this.connection.execute(
-      'INSERT INTO Employee SET empName = ?, empActive = ?, empDepartment = ?',
-      [
-        employee.empName,
-        employee.empActive,
-        employee.empDepartment
-      ])
-    employee.empID = result.employeeId
-    return employee
-  }
-
-  async merge(employee: Employee): Promise<Employee> {
-    let result = await this.connection.execute(
-      "UPDATE Employee SET empName = ?, empActive = ?,\
-      empDepartment = ? WHERE empID = ?",
+      "INSERT INTO Employee SET empName = ?, empActive = ?, empDepartment = ?, creator = ?",
       [
         employee.empName,
         employee.empActive,
         employee.empDepartment,
-        employee.empID
+        employee.creator
       ])
+    employee.empID = result.insertId
+    return employee
+  }
+
+  async merge(employee: Employee, creator: string): Promise<Employee> {
+    let result = await this.connection.execute(
+      "UPDATE Employee SET empName = ?, empActive = ?, empDepartment = ? WHERE empID = ? AND creator = ?",
+      [
+        employee.empName,
+        employee.empActive,
+        employee.empDepartment,
+        employee.empID,
+        creator
+      ])
+    // console.log(employee.empID);
     return result
   }
 
-  async delete(employee: Employee): Promise<Employee> {
-    await this.connection.execute(
-      "DELETE FROM Employee WHERE empID = ?",
-      employee.empID
-    )
-    return this.convertModel(employee)
+  async delete(employee: Employee, creator: string): Promise<Employee> {
+    let result = await this.connection.execute(
+      "DELETE FROM Employee WHERE empID = ? AND creator = ?",
+      [employee.empID, creator])
+    return result
   }
 }

@@ -1,72 +1,74 @@
-import { IEmployeeRepository } from '../interfaces/IEmployee'
+import { IEmployee } from '../interfaces/IEmployee'
 import { Employee } from '../models/employeeModel'
 
 export class GetEmployee {
-  private employeeRepository: IEmployeeRepository
+  private employeeInterface: IEmployee
 
-  constructor(employeeRepository: IEmployeeRepository) {
-    this.employeeRepository = employeeRepository
+  constructor(employeeInterface: IEmployee) {
+    this.employeeInterface = employeeInterface
   }
 
   execute(empID: number) {
-    return this.employeeRepository.find(empID)
+    return this.employeeInterface.find(empID)
   }
 }
 
 export class ListEmployees {
-  private employeeRepository: IEmployeeRepository
+  private employeeInterface: IEmployee
 
-  constructor(employeeRepository: IEmployeeRepository) {
-    this.employeeRepository = employeeRepository
+  constructor(employeeInterface: IEmployee) {
+    this.employeeInterface = employeeInterface
   }
 
   execute() {
-    return this.employeeRepository.findAll()
+    return this.employeeInterface.findAll()
   }
 }
 
 export class CreateEmployee {
-  private employeeRepository: IEmployeeRepository
+  private employeeInterface: IEmployee
 
-  constructor(employeeRepository: IEmployeeRepository) {
-    this.employeeRepository = employeeRepository
+  constructor(employeeInterface: IEmployee) {
+    this.employeeInterface = employeeInterface
   }
 
-  execute(empName: string, empActive: boolean, empDepartment: number) {
+  execute(empName: string, empActive: boolean, empDepartment: number, creator: string) {
     let employee = new Employee()
     employee.empName = empName
     employee.empActive = empActive
     employee.empDepartment = empDepartment
-    return this.employeeRepository.persist(employee)
+    employee.creator = creator
+    return this.employeeInterface.persist(employee)
   }
 }
 
 export class UpdateEmployee {
-  private employeeRepository: IEmployeeRepository
+  private employeeInterface: IEmployee
 
-  constructor(employeeRepository: IEmployeeRepository) {
-    this.employeeRepository = employeeRepository
+  constructor(employeeInterface: IEmployee) {
+    this.employeeInterface = employeeInterface
   }
 
-  async execute(empID: number, empName: string, empActive: boolean, empDepartment: number) {
-    let employee = await this.employeeRepository.find(empID)
+  async execute(empID: number, empName: string, empActive: boolean, empDepartment: number, creator: string) {
+    let employee = await this.employeeInterface.find(empID)
     employee.empName = empName
     employee.empActive = empActive
     employee.empDepartment = empDepartment
-    return this.employeeRepository.merge(employee)
+    employee.creator = creator
+    return this.employeeInterface.merge(employee, creator)
   }
 }
 
 export class DeleteEmployee {
-  private employeeRepository: IEmployeeRepository
+  private employeeInterface: IEmployee
 
-  constructor(employeeRepository: IEmployeeRepository) {
-    this.employeeRepository = employeeRepository
+  constructor(employeeInterface: IEmployee) {
+    this.employeeInterface = employeeInterface
   }
 
-  async execute(empID: number) {
-    let employee = await this.employeeRepository.find(empID)
-    return this.employeeRepository.delete(employee)
+  async execute(empID: number, creator: string) {
+    let employee = await this.employeeInterface.find(empID)
+    return this.employeeInterface.delete(employee, creator)
   }
 }
 
