@@ -12,23 +12,29 @@
   "produces": [
     "application/json"
   ],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
   "paths": {
-    "/v1/search": {
+    "/employees/{employeeId}": {
       "get": {
         "tags": [
-          "Search Text"
+          "Get an employee"
         ],
-        "summary": "Search by places using opencagedata service",
-        "content": {
-          "application/json": {}
-        },
+        "summary": "Returns information about one employee.",
         "parameters": [
           {
-            "name": "q",
-            "in": "query",
-            "description": "Specifies the query string",
+            "in": "path",
+            "name": "employeeId",
+            "schema": {
+              "type": "integer"
+            },
             "required": true,
-            "type": "string"
+            "description": "Numeric ID of the employee."
           }
         ],
         "responses": {
@@ -41,15 +47,32 @@
         }
       }
     },
-    "/users": {
+    "/employees?pagesize={pagesize}&page={page}": {
       "get": {
         "tags": [
-          "Get users"
+          "Get employees"
         ],
-        "summary": "Returns a list of users",
-        "content": {
-          "application/json": {}
-        },
+        "summary": "Returns a list of employees.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pagesize",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Quantity of employees on the one page"
+          },
+          {
+            "in": "path",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "On what page (numbering starts from 0)"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -90,4 +113,3 @@
     }
   }
 }
-

@@ -59,7 +59,7 @@ export class EmployeesController {
       .catch((err: any) => {
         res.status(500).json({
           success: false,
-          message: 'Server error\n' + err.message
+          message: 'Server error \n ' + err.message
         });
       });
   }
