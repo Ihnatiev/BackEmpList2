@@ -1,1 +1,0 @@
-{"version":3,"file":"checks.js","sourceRoot":"","sources":["../../../backend/middleware/checks.ts"],"names":[],"mappings":";;AACA,sDAAqD;AAExC,QAAA,eAAe,GAAG,CAAC,GAAY,EAAE,GAAa,EAAE,IAAkB,EAAE,EAAE;IACjF,IAAI,CAAC,GAAG,CAAC,IAAI,CAAC,KAAK,IAAI,CAAC,GAAG,CAAC,IAAI,CAAC,QAAQ,EAAE;QACzC,MAAM,IAAI,2BAAa,CAAC,yBAAyB,CAAC,CAAC;KACpD;SAAM;QACL,IAAI,EAAE,CAAC;KACR;AACH,CAAC,CAAA"}
