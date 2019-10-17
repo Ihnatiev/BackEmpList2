@@ -49,7 +49,7 @@ export class EmployeesController {
         let results = await this.connection
           .execute("SELECT empID, empName, creator,\
         IF(empActive, 'Yes', 'No')\
-        empActive, dpName FROM Employee INNER JOIN Departmen\
+        empActive, dpName FROM Employee INNER JOIN Department\
         ON empDepartment = dpID LIMIT " + limit);
         return res.json({
           employees: results,
