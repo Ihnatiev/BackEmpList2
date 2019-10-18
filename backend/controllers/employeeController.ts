@@ -21,14 +21,19 @@ export class EmployeesController {
     const useCase = new GetEmployee(this.employeeService);
     await useCase.execute(empID)
       .then(employee => {
-        return res.status(200).json({
-          employee: [employee]
-        });
+        if (employee) {
+          res.status(200).json({
+            employee: [employee]
+          });
+        } else {
+          res.status(404).json({
+            message: 'Employee not found!'
+          });
+        }
       })
       .catch(err => {
         res.status(404).json({
-          success: false,
-          message: 'Employee not found!\n' + err.message
+          message: err.message
         });
       });
   }

@@ -19,6 +19,13 @@
   "schemes": [
     "https"
   ],
+  "securityDefinitions": {
+    "oauth2": {
+      "name": "Authorization",
+      "in": "header",
+      "type": "apiKey"
+    }
+  },
   "produces": [
     "application/json"
   ],
@@ -51,16 +58,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successful operation"
           },
           "400": {
             "description": "Bad request"
+          },
+          "404": {
+            "description": "Employees not found"
           }
         }
       }
     },
     "/employees": {
       "post": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
         "tags": [
           "employees"
         ],
@@ -95,19 +110,21 @@
             }
           }
         ],
-        "security": [
-          {
-            "employeelist_auth": [
-              "write:employee"
-            ]
-          }
-        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successful operation"
           },
           "400": {
             "description": "Bad request"
+          },
+          "401": {
+            "description": "You are not authenticated"
+          },
+          "405": {
+            "description": "Invalid input"
+          },
+          "UnauthorizedError": {
+            "description": "Access token is missing or invalid"
           }
         }
       }
@@ -130,14 +147,22 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successful operation"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Employee not found"
           }
         }
       },
       "put": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
         "tags": [
           "employees"
         ],
@@ -180,23 +205,27 @@
             }
           }
         ],
-        "security": [
-          {
-            "employeelist_auth": [
-              "write:employee"
-            ]
-          }
-        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successful operation"
           },
           "400": {
             "description": "Bad request"
+          },
+          "405": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       },
       "delete": {
+        "security": [
+          {
+            "oauth2": []
+          }
+        ],
         "tags": [
           "employees"
         ],
@@ -212,19 +241,18 @@
             "description": "Numeric ID of the employee."
           }
         ],
-        "security": [
-          {
-            "employeelist_auth": [
-              "write:employee"
-            ]
-          }
-        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successful operation"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Employee not found"
           }
         }
       }
@@ -339,21 +367,6 @@
           }
         }
       }
-    }
-  },
-  "securityDefinitions": {
-    "employeelist_auth": {
-      "type": "oauth2",
-      "authorizationUrl": "https://localhost:3000/api/auth/login",
-      "flow": "implicit",
-      "scopes": {
-        "write:employees": "modify employees in your account"
-      }
-    },
-    "api_key": {
-      "type": "apiKey",
-      "name": "api_key",
-      "in": "header"
     }
   },
   "definitions": {
