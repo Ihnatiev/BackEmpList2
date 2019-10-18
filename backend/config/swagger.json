@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "Swagger EmployeeStore"
+    "title": "Swagger EmployeeList"
   },
   "host": "localhost:3000",
   "basePath": "/api",
@@ -35,7 +35,7 @@
         "tags": [
           "employees"
         ],
-        "summary": "Returns a list of employees.",
+        "summary": "Returns a list of employees",
         "parameters": [
           {
             "in": "path",
@@ -66,12 +66,134 @@
         }
       }
     },
+    "/employees": {
+      "post": {
+        "tags": [
+          "employees"
+        ],
+        "summary": "Add a new employee to the list",
+        "operationId": "createEmployee",
+        "consumes": "application/json",
+        "produces": "application/json",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Employee object that needs to be added to the list",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "empName": {
+                  "type": "string"
+                },
+                "empActive": {
+                  "type": "boolean"
+                },
+                "empDepartment": {
+                  "type": "integer"
+                }
+              },
+              "example": {
+                "empName": "Uncle Bob",
+                "empActive": 1,
+                "empDepartment": 1
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
     "/employees/{employeeId}": {
       "get": {
         "tags": [
           "employees"
         ],
-        "summary": "Returns information about one employee.",
+        "summary": "Find employee by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "employees"
+        ],
+        "summary": "Update an existing employee",
+        "operationId": "updateEmployee",
+        "consumes": "application/json",
+        "produces": "application/json",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "employeeId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Employee object that needs to be updated in the list",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "empName": {
+                  "type": "string"
+                },
+                "empActive": {
+                  "type": "boolean"
+                },
+                "empDepartment": {
+                  "type": "integer"
+                }
+              },
+              "example": {
+                "empName": "Uncle Bob",
+                "empActive": 1,
+                "empDepartment": 1
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "employees"
+        ],
+        "summary": "Deletes an employee",
         "parameters": [
           {
             "in": "path",
@@ -98,15 +220,31 @@
         "tags": [
           "user"
         ],
-        "summary": "Save user to database",
+        "summary": "Create user",
         "content": {
           "application/x-www-form-urlencoded": {}
         },
+        "operationId": "signupUser",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
         "parameters": [
           {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "email",
-            "in": "body",
-            "description": "Specifies the query string",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
             "required": true,
             "type": "string"
           }
