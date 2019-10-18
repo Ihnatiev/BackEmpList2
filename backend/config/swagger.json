@@ -22,13 +22,6 @@
   "produces": [
     "application/json"
   ],
-  "securityDefinitions": {
-    "Bearer": {
-      "type": "apiKey",
-      "name": "Authorization",
-      "in": "header"
-    }
-  },
   "paths": {
     "/employees?pagesize={pagesize}&page={page}": {
       "get": {
@@ -100,6 +93,13 @@
                 "empDepartment": 1
               }
             }
+          }
+        ],
+        "security": [
+          {
+            "employeelist_auth": [
+              "write:employee"
+            ]
           }
         ],
         "responses": {
@@ -180,6 +180,13 @@
             }
           }
         ],
+        "security": [
+          {
+            "employeelist_auth": [
+              "write:employee"
+            ]
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -203,6 +210,13 @@
             },
             "required": true,
             "description": "Numeric ID of the employee."
+          }
+        ],
+        "security": [
+          {
+            "employeelist_auth": [
+              "write:employee"
+            ]
           }
         ],
         "responses": {
@@ -231,22 +245,29 @@
         ],
         "parameters": [
           {
-            "name": "name",
-            "in": "query",
+            "in": "body",
+            "name": "body",
+            "description": "User object",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "email",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "required": true,
-            "type": "string"
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              },
+              "example": {
+                "name": "Uncle Bob",
+                "email": "bob@test.com",
+                "password": "test1234"
+              }
+            }
           }
         ],
         "responses": {
@@ -273,18 +294,25 @@
         ],
         "parameters": [
           {
-            "name": "email",
-            "in": "query",
-            "description": "The user email for login",
+            "in": "body",
+            "name": "body",
+            "description": "User object",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "description": "The password for login in clear text",
-            "required": true,
-            "type": "string"
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              },
+              "example": {
+                "email": "bob@test.com",
+                "password": "test1234"
+              }
+            }
           }
         ],
         "responses": {
@@ -311,6 +339,21 @@
           }
         }
       }
+    }
+  },
+  "securityDefinitions": {
+    "employeelist_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://localhost:3000/api/auth/login",
+      "flow": "implicit",
+      "scopes": {
+        "write:employees": "modify employees in your account"
+      }
+    },
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
     }
   },
   "definitions": {
