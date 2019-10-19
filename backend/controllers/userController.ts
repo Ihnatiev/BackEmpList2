@@ -72,7 +72,7 @@ export class UserController {
           token: token,
           expiresIn: 3600,
           userId: fetchedUser.id,
-          uName: fetchedUser.name
+          userName: fetchedUser.name
         });
       })
       .catch(err => {
