@@ -1,16 +1,18 @@
 import { User } from '../models/userModel';
-import { IUser } from '../interfaces/IUser';
 import { IDBConnection } from '../config/IDBConnection';
 
-export class UserService extends IUser {
+export class UserService {
   private connection: any;
 
   constructor(connection: IDBConnection) {
-    super();
     this.connection = connection;
   };
 
-  async signup(user: User): Promise<User> {
+  async signup(name: string, email: string, password: string): Promise<User> {
+    let user = new User();
+    user.name = name;
+    user.email = email;
+    user.password = password;
     let result = await this.connection.execute(
       'INSERT INTO Users SET name = ?, email = ?, password = ?',
       [
@@ -22,7 +24,7 @@ export class UserService extends IUser {
     return user;
   }
 
-  async find(email: string): Promise<User> {
+  async login(email: string): Promise<User> {
     let queryResults = await this.connection.execute(
       'SELECT * FROM Users WHERE email = ?', [email]);
     return queryResults[0];

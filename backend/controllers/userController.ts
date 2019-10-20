@@ -1,6 +1,5 @@
 import { UserService } from '../services/userService';
 import { IDBConnection } from '../config/IDBConnection';
-import { CreateUser } from '../usecases/user';
 import secret from '../config/secret';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
@@ -14,11 +13,10 @@ export class UserController {
 
   async createUser(req: any, res: any) {
     const { name, email } = req.body;
-    const useCase = new CreateUser(this.userService);
     try {
       bcrypt.hash(req.body.password, 12)
         .then(async hash => {
-          await useCase.execute(name, email, hash)
+          await this.userService.signup(name, email, hash)
             .then(user => {
               return res.status(201).json({
                 success: true,
@@ -44,7 +42,7 @@ export class UserController {
   async loginUser(req: any, res: any) {
     let fetchedUser: any;
     const hash = req.body.password;
-    this.userService.find(req.body.email)
+    this.userService.login(req.body.email)
       .then(
         user => {
           if (!user) {
