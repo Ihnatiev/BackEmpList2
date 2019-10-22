@@ -84,7 +84,9 @@ export class EmployeesController {
           if (result.affectedRows > 0) {
             return res.status(200).json({
               message: 'Update successful!',
-              empName: empName
+              empName: empName,
+              empActive: empActive,
+              empDepartment: empDepartment
             });
           } else {
             return res.status(401).json({

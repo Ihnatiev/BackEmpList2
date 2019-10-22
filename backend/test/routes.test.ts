@@ -54,7 +54,7 @@ describe('Employee endpoints', () => {
       .post('/api/employees')
       .send({
         empName: 'Uncle Bob',
-        empActive: 1,
+        empActive: 0,
         empDepartment: 2
       })
       .set('Authorization', `Bearer ${token}`)
@@ -77,6 +77,8 @@ describe('Employee endpoints', () => {
       .then((response) => {
         expect(response.status).toBe(200);
         expect(response.body.empName).toBe('Marmok');
+        expect(response.body.empActive).toEqual(1);
+        expect(response.body.empDepartment).toEqual(3);
       });
   });
 
