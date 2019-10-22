@@ -14,7 +14,8 @@ export class EmployeesController {
       .then(employee => {
         if (employee) {
           return res.status(200).json({
-            employee: [employee]
+            employee: [employee],
+            id: employee.empID
           });
         } else {
           return res.status(404).json({
@@ -82,7 +83,8 @@ export class EmployeesController {
         try {
           if (result.affectedRows > 0) {
             return res.status(200).json({
-              message: 'Update successful!'
+              message: 'Update successful!',
+              empName: empName
             });
           } else {
             return res.status(401).json({

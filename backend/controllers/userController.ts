@@ -22,6 +22,7 @@ export class UserController {
                 success: true,
                 message: 'User created!',
                 userId: user.id,
+                userName: user.name
               });
             })
             .catch(err => {

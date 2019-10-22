@@ -17,6 +17,7 @@ describe('User signUp', () => {
       .end((err, response) => {
         expect(response.status).toBe(201);
         done();
+        expect(response.body.userName).toBe('Bob');
       });
   })
 })
@@ -75,6 +76,7 @@ describe('Employee endpoints', () => {
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.status).toBe(200);
+        expect(response.body.empName).toBe('Marmok');
       });
   });
 
@@ -83,6 +85,7 @@ describe('Employee endpoints', () => {
       .get('/api/employees/' + employeeId)
       .then((response) => {
         expect(response.status).toBe(200);
+        expect(response.body.id).toBe(employeeId);
       });
   });
 

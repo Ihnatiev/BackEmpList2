@@ -40,7 +40,7 @@ app.use((req, res, next) => {
   next();
 });
 
-const { PORT = 3000 } = process.env;
+const { PORT = 8888 } = process.env;
 const server = https.createServer(httpsOptions, app);
 
 server.listen(PORT, () =>
