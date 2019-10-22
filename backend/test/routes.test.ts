@@ -5,6 +5,22 @@ import secret from '../config/secret';
 let token: string;
 let employeeId: number;
 
+describe('User signUp', () => {
+  it('Create new user', (done) => {
+    return request(app)
+      .post('/api/auth/signup')
+      .send({
+        name: 'Bob',
+        email: 'bobby@test.com',
+        password: 'bobby-cool123'
+      })
+      .end((err, response) => {
+        expect(response.status).toBe(201);
+        done();
+      });
+  })
+})
+
 beforeAll((done) => {
   request(app)
     .post('/api/auth/login')
@@ -46,7 +62,6 @@ describe('Employee endpoints', () => {
         employeeId = response.body.employee;
         done();
       });
-
   });
 
   it('Update an employee', () => {
