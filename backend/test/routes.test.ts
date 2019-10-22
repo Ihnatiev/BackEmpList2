@@ -1,5 +1,6 @@
 import request from 'supertest';
 import app from '../../server';
+import secret from '../config/secret';
 
 let token: string;
 let employeeId: number;
@@ -7,10 +8,7 @@ let employeeId: number;
 beforeAll((done) => {
   request(app)
     .post('/api/auth/login')
-    .send({
-      email: 'qwerty123456@gmail.com',
-      password: 'qwerty123456',
-    })
+    .send(secret.payload)
     .end((err, response) => {
       token = response.body.token;
       done();
