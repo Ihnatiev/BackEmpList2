@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../../server';
 
-let token: any;
+let token: string;
 let employeeId: number;
 
 beforeAll((done) => {
