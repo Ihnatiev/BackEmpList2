@@ -13,18 +13,18 @@ export class EmployeesController {
     this.employeeService.find(empID)
       .then(employee => {
         if (employee) {
-          res.status(200).json({
+          return res.status(200).json({
             employee: [employee]
           });
         } else {
-          res.status(404).json({
+          return res.status(404).json({
             message: 'Employee not found!'
           });
         }
       })
       .catch(err => {
         res.status(404).json({
-          message: err.message
+          message: 'Server error'
         });
       });
   }
@@ -50,7 +50,7 @@ export class EmployeesController {
       .catch((err: any) => {
         res.status(500).json({
           success: false,
-          message: 'Server error \n ' + err.message
+          message: 'Server error'
         });
       });
   }
@@ -68,7 +68,7 @@ export class EmployeesController {
     } catch (err) {
       res.status(500).json({
         success: false,
-        message: 'Adding employee failed!\n' + err.message
+        message: 'Adding employee failed!'
       });
     };
   }
@@ -81,22 +81,22 @@ export class EmployeesController {
       .then((result: any) => {
         try {
           if (result.affectedRows > 0) {
-            res.status(200).json({
+            return res.status(200).json({
               message: 'Update successful!'
             });
           } else {
-            res.status(401).json({
+            return res.status(401).json({
               message: 'Not authorized!'
             });
           };
         } catch (error) {
-          res.status(500).json({
+          return res.status(500).json({
             message: 'Updating an employee failed!'
           });
         };
       }).catch(err => {
         res.status(500).json({
-          message: err.message
+          message: 'Server error'
         });
       });
   }
@@ -108,23 +108,23 @@ export class EmployeesController {
       .then((employee: any) => {
         try {
           if (employee.affectedRows > 0) {
-            res.status(200).json({
+            return res.status(200).json({
               message: 'Deletion successful!'
             });
           } else {
-            res.status(401).json({
+            return res.status(401).json({
               message: 'Not authorized!'
             });
           };
         } catch (error) {
-          res.status(500).json({
+          return res.status(500).json({
             message: "You are not authenticated!"
           });
         };
       }).catch(err => {
         res.status(500).json({
           success: false,
-          message: err.message
+          message: 'Server error'
         });
       });
   }
