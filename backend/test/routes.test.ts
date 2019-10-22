@@ -62,6 +62,9 @@ describe('Employee endpoints', () => {
         expect(response.status).toBe(201);
         employeeId = response.body.employee;
         done();
+        expect(response.body.empName).toEqual('Uncle Bob');
+        expect(response.body.empActive).toEqual(0);
+        expect(response.body.empDepartment).toEqual(2);
       });
   });
 
@@ -76,7 +79,7 @@ describe('Employee endpoints', () => {
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.status).toBe(200);
-        expect(response.body.empName).toBe('Marmok');
+        expect(response.body.empName).toEqual('Marmok');
         expect(response.body.empActive).toEqual(1);
         expect(response.body.empDepartment).toEqual(3);
       });

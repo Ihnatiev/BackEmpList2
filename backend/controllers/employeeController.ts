@@ -64,7 +64,10 @@ export class EmployeesController {
       return res.status(201).json({
         success: true,
         message: 'Employee added successfully!',
-        employee: result.empID
+        employee: result.empID,
+        empName: result.empName,
+        empActive: result.empActive,
+        empDepartment: result.empDepartment
       });
     } catch (err) {
       res.status(500).json({
