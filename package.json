@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall": "npx tsc",
     "dev": "tsc-watch --onSuccess \"node ./build/server.js\"",
+    "start": "npx pm2 start pm2.yaml",
     "test": "cross-env NODE_ENV=test jest --testTimeout=10000"
   },
   "keywords": [],
@@ -47,6 +49,7 @@
     "mongoose": "^5.7.3",
     "mongoose-auto-increment": "^5.0.1",
     "mysql": "^2.17.1",
+    "pm2": "^4.1.2",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "swagger-ui-express": "^4.1.1",
