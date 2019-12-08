@@ -11,21 +11,26 @@ export class EmployeesService {
   async find(empID: number): Promise<Employee> {
     const queryResult = await this.connection.execute(
       "SELECT empID, empName, IF (empActive, 'Yes', 'No')\
-      empActive, dpName FROM Employee NNER JOIN Department\
+      empActive, dpName FROM EmployeeDB.Employees NNER JOIN EmployeeDB.Departments\
       ON empDepartment = dpID WHERE empID = ?", empID);
-    return queryResult[0];
+      //console.log(queryResult[0]);
+      const e: Employee = queryResult[0]
+    return e;
   }
 
-  async findCount(): Promise<Array<Employee>> {
-    const results = await this.connection.execute('SELECT count(*) as totalCount FROM Employee');
+  public async findCount() {
+    const results = await this.connection.execute('SELECT count(*) as totalCount FROM EmployeeDB.Employees');
     return results;
   }
 
-  async findAll(limit: string): Promise<Array<Employee>> {
+  async findAll(numPerPage: number, page: number) {
+    const skip = page * numPerPage;
+    const end_limit = numPerPage;
+    const limit = skip + ',' + end_limit;
     const queryResults = await this.connection.execute(
       "SELECT empID, empName, creator, IF (empActive, 'Yes', 'No')\
-    empActive, dpName FROM Employee\
-    INNER JOIN Department ON empDepartment = dpID LIMIT " + limit)
+    empActive, dpName FROM EmployeeDB.Employees\
+    INNER JOIN EmployeeDB.Departments ON empDepartment = dpID LIMIT " + limit)
     let results = [];
     results = queryResults.map((m: any) => {
       return m;
@@ -40,7 +45,7 @@ export class EmployeesService {
     employee.empDepartment = empDepartment;
     employee.creator = creator;
     const result = await this.connection.execute(
-      "INSERT INTO Employee SET empName = ?, empActive = ?, empDepartment = ?, creator = ?",
+      "INSERT INTO EmployeeDB.Employees SET empName = ?, empActive = ?, empDepartment = ?, creator = ?",
       [
         employee.empName,
         employee.empActive,
@@ -58,7 +63,7 @@ export class EmployeesService {
     employee.empDepartment = empDepartment;
     employee.creator = creator;
     const result = await this.connection.execute(
-      "UPDATE Employee SET empName = ?, empActive = ?, empDepartment = ? WHERE empID = ? AND creator = ?",
+      "UPDATE EmployeeDB.Employees SET empName = ?, empActive = ?, empDepartment = ? WHERE empID = ? AND creator = ?",
       [
         employee.empName,
         employee.empActive,
@@ -72,7 +77,7 @@ export class EmployeesService {
   async delete(empID: number, creator: string): Promise<Employee> {
     const employee = await this.find(empID);
     const result = await this.connection.execute(
-      "DELETE FROM Employee WHERE empID = ? AND creator = ?",
+      "DELETE FROM EmployeeDB.Employees WHERE empID = ? AND creator = ?",
       [employee.empID, creator]);
     return result;
   }

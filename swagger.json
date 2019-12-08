@@ -30,7 +30,7 @@
     "application/json"
   ],
   "paths": {
-    "/employees?pagesize={pagesize}&page={page}": {
+    "/employees/{pagesize}/{page}": {
       "get": {
         "tags": [
           "employees"
@@ -38,7 +38,7 @@
         "summary": "Returns a list of employees",
         "parameters": [
           {
-            "in": "path",
+            "in": "query",
             "name": "pagesize",
             "schema": {
               "type": "integer"
@@ -47,7 +47,7 @@
             "description": "Quantity of employees on the one page"
           },
           {
-            "in": "path",
+            "in": "query",
             "name": "page",
             "schema": {
               "type": "integer"

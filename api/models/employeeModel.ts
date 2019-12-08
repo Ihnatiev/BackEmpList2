@@ -4,6 +4,7 @@ export class Employee {
   private _empActive: boolean;
   private _empDepartment: number;
   private _creator: string;
+  totalCount: any;
 
   get empID(): number {
     return this._empID;

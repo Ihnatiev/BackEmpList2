@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import { checkUserCreate } from "../middleware/checks";
+import { Request, Response } from 'express';
+import { checkUserCreate } from '../middleware/checks';
 import { EmployeesController } from '../controllers/employeeController';
-import { UserController } from '../controllers/userController';
+import { UserController } from '../controllers/UserController';
 import { checkJwt } from '../middleware/check-auth';
 import { MysqlConnection } from '../app';
 
@@ -10,15 +10,15 @@ const employeesController = new EmployeesController(mysqlConnection);
 const userController = new UserController(mysqlConnection);
 
 export default [
-  {
-    path: "/api/auth/signup",
-    method: "post",
-    handler: [checkUserCreate,
-      async (req: Request, res: Response) => {
-        await userController.createUser(req, res);
-      }
-    ]
-  },
+  // {
+  //   path: "/api/auth/signup",
+  //   method: "post",
+  //   handler: [checkUserCreate,
+  //     (req: Request, res: Response) => {
+  //       userController.createUser(req, res);
+  //     }
+  //   ]
+  // },
   {
     path: "/api/auth/login",
     method: "post",

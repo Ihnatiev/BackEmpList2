@@ -1,0 +1,80 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Employees list
+# during dev, should point to your local machine
+host: localhost:5555
+# basePath prefixes all resource paths
+basePath: /api/auth
+#
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/x-www-form-urlencoded
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/x-www-form-urlencoded
+  - application/json
+paths:
+  /signup:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: UserController
+    post:
+      description: Create a new user
+      # used as the method name of the controller
+      operationId: createUser
+      parameters:
+        - name: user
+          in: body
+          description: a new user details
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: Successfuly created new user
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/UserResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  User:
+    required:
+      - email
+      - password
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+
+  UserResponse:
+    properties:
+      success:
+        type: boolean
+      message:
+        type: string
+      userId:
+        type: integer
+    required:
+      - success
+      - message
+
+  ErrorResponse:
+    properties:
+      message:
+        type: string
+    required:
+      - message

@@ -8,66 +8,68 @@ export class EmployeesController {
     this.employeeService = new EmployeesService(dbConnection);
   }
 
-  async findEmployee(req: any, res: any) {
-    const empID = req.params.empID;
-    this.employeeService.find(empID)
-      .then(employee => {
-        if (employee) {
-          return res.status(200).json({
-            employee: [employee],
-            id: employee.empID
-          });
-        } else {
-          return res.status(404).json({
-            message: 'Employee not found!'
-          });
-        }
-      })
-      .catch(err => {
-        res.status(404).json({
-          message: 'Server error'
-        });
+  public async findEmployee(req: any, res: any) {
+    try {
+      const empID = req.params.empID;
+      this.employeeService.find(empID)
+        .then(employee => {
+          if (employee) {
+            return res.status(200).json({
+              success: true,
+              employee: [employee]
+            });
+          } else {
+            return res.status(404).json({
+              success: false,
+              message: 'Employee not found!'
+            });
+          }
+        })
+    } catch (err) {
+      res.status(500).json({
+        success: false,
+        message: 'Server error'
       });
+    };
   }
 
-  async findAllEmployees(req: any, res: any) {
-    let totalCount: any;
+  public async findAllEmployees(req: any, res: any) {
     const numPerPage = +req.query.pagesize;
     const page = +req.query.page;
-    const skip = page * numPerPage;
-    const end_limit = numPerPage;
-    const limit = skip + ',' + end_limit;
-    this.employeeService.findCount()
-      .then((results: any) => {
-        totalCount = results[0].totalCount;
-      })
-      .then(async () => {
-        const results = await this.employeeService.findAll(limit);
-        return res.json({
-          employees: results,
-          maxEmployees: totalCount
-        });
-      })
-      .catch((err: any) => {
-        res.status(500).json({
+    
+      const count = await this.employeeService.findCount();
+      const results = await this.employeeService.findAll(numPerPage, page);
+      let totalEmployee = count[0].totalCount;
+      try {
+      if (totalEmployee === 0) {
+        return res.status(404).json({
           success: false,
-          message: 'Server error'
+          message: 'Employee not found'
         });
+      } else if (count && results) {
+        return res.status(200).json({
+          employees: results,
+          maxEmployees: totalEmployee
+        });
+      };
+    } catch {
+      res.status(500).json({
+        success: false,
+        message: 'Server error'
       });
+    };
   }
 
   async createEmployee(req: any, res: any) {
     const { empName, empActive, empDepartment } = req.body;
     const creator = req.userData.userId;
     try {
-      let result = await this.employeeService.create(empName, empActive, empDepartment, creator);
+      const result = await this.employeeService
+        .create(empName, empActive, empDepartment, creator);
       return res.status(201).json({
         success: true,
         message: 'Employee added successfully!',
-        employee: result.empID,
-        empName: result.empName,
-        empActive: result.empActive,
-        empDepartment: result.empDepartment
+        employee: result.empID
       });
     } catch (err) {
       res.status(500).json({
@@ -81,24 +83,25 @@ export class EmployeesController {
     const empID = req.params.empID;
     const creator = req.userData.userId;
     const { empName, empActive, empDepartment } = req.body;
-    await this.employeeService.update(empID, empName, empActive, empDepartment, creator)
+    await this.employeeService
+      .update(empID, empName, empActive, empDepartment, creator)
       .then((result: any) => {
         try {
           if (result.affectedRows > 0) {
             return res.status(200).json({
-              message: 'Update successful!',
-              empName: empName,
-              empActive: empActive,
-              empDepartment: empDepartment
+              success: true,
+              message: 'Update successfully!'
             });
           } else {
             return res.status(401).json({
-              message: 'Not authorized!'
+              success: false,
+              message: 'You are not authorized!'
             });
           };
         } catch (error) {
           return res.status(500).json({
-            message: 'Updating an employee failed!'
+            success: false,
+            message: "Updating an employee failed!"
           });
         };
       }).catch(err => {
@@ -116,16 +119,19 @@ export class EmployeesController {
         try {
           if (employee.affectedRows > 0) {
             return res.status(200).json({
+              success: true,
               message: 'Deletion successful!'
             });
           } else {
             return res.status(401).json({
-              message: 'Not authorized!'
+              success: false,
+              message: 'You are not authorized!'
             });
           };
         } catch (error) {
           return res.status(500).json({
-            message: "You are not authenticated!"
+            success: false,
+            message: "Deleting an employee failed!"
           });
         };
       }).catch(err => {

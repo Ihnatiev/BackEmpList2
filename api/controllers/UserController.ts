@@ -11,50 +11,46 @@ export class UserController {
     this.userService = new UserService(dbConnection);
   }
 
-  async createUser(req: any, res: any) {
-    const { name, email } = req.body;
+  createUser (req: any, res: any) {
+    //console.log(req.swagger);
+    const { name, email, password } = req.body;
     try {
-      bcrypt.hash(req.body.password, 12)
-        .then(async hash => {
-          await this.userService.signup(name, email, hash)
-            .then(user => {
-              return res.status(201).json({
-                success: true,
-                message: 'User created!',
-                userId: user.id,
-                userName: user.name
-              });
-            })
-            .catch(err => {
-              res.status(500).json({
-                success: false,
-                message: 'This email already exists!'
-              });
-            });
+      this.userService.signup(name, email, password)
+        .then(user => {
+          return res.status(201).json({
+            success: true,
+            message: 'User created!',
+            userId: user.id
+          });
+        })
+        .catch(err => {
+          res.status(500).json({
+            success: false,
+            message: 'This email already exists!'
+          });
         });
     } catch (err) {
       res.status(500).json({
         success: false,
         message: 'Invalid authentication credentials!'
       });
-    }
-  }
+    };
+  };
 
   async loginUser(req: any, res: any) {
     let fetchedUser: any;
     const hash = req.body.password;
     this.userService.login(req.body.email)
-      .then(
-        user => {
-          if (!user) {
-            return res.status(401).json({
-              success: false,
-              message: 'Auth failed! Check your email and password.'
-            });
-          };
-          fetchedUser = user;
-          return bcrypt.compare(req.body.password, hash);
-        })
+      .then(user => {
+        if (!user) {
+          return res.status(400).json({
+            success: false,
+            message: 'Auth failed! Check your email and password.'
+          });
+        };
+        fetchedUser = user;
+        return bcrypt.compare(req.body.password, hash);
+      })
       .then(err => {
         if (err) {
           return res.status(401).json({
